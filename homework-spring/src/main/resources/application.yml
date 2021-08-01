@@ -1,0 +1,11 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+info:
+  app:
+    name: 'Homework-Spring Application'
+    descrption: "Application for homework"
+    version: 1.0.0
+
