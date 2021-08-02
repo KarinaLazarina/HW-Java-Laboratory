@@ -22,16 +22,22 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        log.info("Create user" + userDto.getFirstName() + " " + userDto.getLastName());
+        log.info("Create user " + userDto.getFirstName() + " " + userDto.getLastName());
         userRepository.createUser(mapUserDtoToUser(userDto));
         return userDto;
     }
 
     @Override
     public UserDto updateUser(String login, UserDto userDto) {
-        log.info("Update user" + userDto.getFirstName() + " " + userDto.getLastName());
-        userRepository.updateUser(login, mapUserDtoToUser(userDto));
-        return userDto;
+        log.info("Update user " + userDto.getFirstName() + " " + userDto.getLastName());
+        User user = mapUserDtoToUser(userDto);
+
+        User oldUser = userRepository.getUser(login);
+        user.setLogin(oldUser.getLogin());
+        user.setPassword(oldUser.getPassword());
+
+        userRepository.updateUser(login, user);
+        return mapUserToUserDto(user);
     }
 
     @Override
