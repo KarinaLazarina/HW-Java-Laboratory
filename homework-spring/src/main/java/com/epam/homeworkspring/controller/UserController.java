@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/users")
@@ -22,35 +20,27 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{login}")
-    public UserDto getUser(@PathVariable String login,
-                           HttpServletRequest request) {
-        log.info("Path: " + request.getRequestURI());
+    public UserDto getUser(@PathVariable String login) {
         return userService.getUser(login);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public UserDto createUser(@RequestBody @Validated(OnCreate.class) UserDto userDto,
-                              HttpServletRequest request){
-        log.info("Path: " + request.getRequestURI());
+    public UserDto createUser(@RequestBody @Validated(OnCreate.class) UserDto userDto){
         return userService.createUser(userDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/{login}")
     public UserDto updateUser(@PathVariable String login,
-                              @RequestBody @Validated(OnUpdate.class) UserDto userDto,
-                              HttpServletRequest request)
+                              @RequestBody @Validated(OnUpdate.class) UserDto userDto)
     {
-        log.info("Path: " + request.getRequestURI());
         return userService.updateUser(login, userDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/{login}")
-    public void deleteUser(@PathVariable String login,
-                           HttpServletRequest request) {
-        log.info("Path: " + request.getRequestURI());
+    public void deleteUser(@PathVariable String login) {
         userService.deleteUser(login);
     }
 
