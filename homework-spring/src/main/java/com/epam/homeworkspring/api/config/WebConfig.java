@@ -1,4 +1,4 @@
-package com.epam.homeworkspring.controller;
+package com.epam.homeworkspring.api.config;
 
 import com.epam.homeworkspring.interceptor.LoggingInterceptor;
 import org.springframework.stereotype.Component;

@@ -27,10 +27,10 @@ public class LoggingInterceptor implements HandlerInterceptor {
                 + " [sessionId:" + request.getSession().getId() + "]");
     }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        log.info("[afterCompletion] [" + request.getMethod()
-                + "]" + request.getRequestURI()
-                + " [sessionId:" + request.getSession().getId() + "]");
-    }
+//    @Override
+//    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+//        log.info("[afterCompletion] [" + request.getMethod()
+//                + "]" + request.getRequestURI()
+//                + " [sessionId:" + request.getSession().getId() + "]");
+//    }
 }
