@@ -1,16 +1,8 @@
 package com.epam.homeworkspring.repository;
 
 import com.epam.homeworkspring.model.Group;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GroupRepository {
-    Group getGroup(String title);
-
-    Group createGroup(Group group);
-
-    Group updateGroup(String title, Group group);
-
-//    List<User> getUsersOfGroup(String title);
-
-    void deleteGroup(String title);
-
+public interface GroupRepository extends JpaRepository<Group, Integer> {
+    boolean existsByTitle(String title);
 }

@@ -1,12 +1,16 @@
 package com.epam.homeworkspring.service.impl;
 
 import com.epam.homeworkspring.dto.UserDto;
+import com.epam.homeworkspring.exception.UserNotFoundException;
 import com.epam.homeworkspring.model.User;
 import com.epam.homeworkspring.repository.UserRepository;
 import com.epam.homeworkspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+
 
 @Service
 @Slf4j
@@ -16,34 +20,57 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public UserDto getUser(String login) {
-        log.info("Get user with login " + login);
-        return mapUserToUserDto(userRepository.getUser(login));
-    }
+        log.info("Searching for user with login " + login);
+        User user = userRepository.findByLogin(login)
+                .orElseThrow(UserNotFoundException::new);
 
-    @Override
-    public UserDto createUser(UserDto userDto) {
-        log.info("Create user " + userDto.getFirstName() + " " + userDto.getLastName());
-        userRepository.createUser(mapUserDtoToUser(userDto));
-        return userDto;
-    }
-
-    @Override
-    public UserDto updateUser(String login, UserDto userDto) {
-        log.info("Update user " + userDto.getFirstName() + " " + userDto.getLastName());
-        User user = mapUserDtoToUser(userDto);
-
-        User oldUser = userRepository.getUser(login);
-        user.setLogin(oldUser.getLogin());
-        user.setPassword(oldUser.getPassword());
-
-        userRepository.updateUser(login, user);
+        log.info("Find user with login " + login);
         return mapUserToUserDto(user);
     }
 
     @Override
+//    @Transactional
+    public UserDto createUser(UserDto userDto) {
+        log.info("Creating user {} {} with login {}",
+                userDto.getFirstName(), userDto.getLastName(), userDto.getLogin());
+        if(userRepository.existsByLogin(userDto.getLogin())){
+            throw new RuntimeException("User is already exist");
+        }
+
+        User user = userRepository.save(mapUserDtoToUser(userDto));
+        log.info("Creat user {} {} with login {}",
+                user.getFirstName(), user.getLastName(), user.getLogin());
+        return mapUserToUserDto(user);
+    }
+
+    @Override
+//    @Transactional
+    public UserDto updateUser(String login, UserDto userDto) {
+        log.info("Updating user with login {}", login);
+
+        User persistedUser = userRepository.findByLogin(login)
+                .orElseThrow(UserNotFoundException::new);
+
+        String firstName = userDto.getFirstName();
+        if (Objects.nonNull(firstName)) {
+            persistedUser.setFirstName(firstName);
+        }
+        String lastName = userDto.getLastName();
+        if (Objects.nonNull(lastName)) {
+            persistedUser.setLastName(lastName);
+        }
+
+        User storedUser = userRepository.save(persistedUser);
+        log.info("User with login {} successfully updated", storedUser.getLogin());
+        return mapUserToUserDto(storedUser);
+    }
+
+    @Override
     public void deleteUser(String login) {
-        log.info("Delete user with login" + login);
-        userRepository.deleteUser(login);
+        User user = userRepository.findByLogin(login)
+                .orElseThrow(UserNotFoundException::new);
+        userRepository.delete(user);
+        log.info("Used with login {} deleted", login);
     }
 
     private UserDto mapUserToUserDto(User user) {

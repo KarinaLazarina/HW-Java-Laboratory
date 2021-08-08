@@ -4,11 +4,11 @@ import com.epam.homeworkspring.dto.GroupDto;
 import com.epam.homeworkspring.model.Group;
 
 public interface GroupService {
-    GroupDto getGroup(String title);
+    GroupDto getGroup(int id);
 
     GroupDto createGroup(GroupDto groupDto);
 
-    GroupDto updateGroup(String title, GroupDto groupDto);
+    GroupDto updateGroup(int id, GroupDto groupDto);
 
-    void deleteGroup(String title);
+    void deleteGroup(int id);
 }

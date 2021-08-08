@@ -18,8 +18,8 @@ public interface GroupApi {
     })
     @ApiOperation("Get group")
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/{title}")
-    GroupDto getGroup(@PathVariable String title);
+    @GetMapping(value = "/{id}")
+    GroupDto getGroup(@PathVariable int id);
 
 
     @ApiOperation("Create group")
@@ -32,13 +32,13 @@ public interface GroupApi {
     })
     @ApiOperation("Update group")
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping(value = "/{title}")
-    GroupDto updateGroup(@PathVariable String title, @RequestBody GroupDto groupDto);
+    @PutMapping(value = "/{id}")
+    GroupDto updateGroup(@PathVariable int id, @RequestBody GroupDto groupDto);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "title", paramType = "path", required = true, value = "Group title"),
     })
     @ApiOperation("Delete group")
-    @DeleteMapping(value = "/{title}")
-    ResponseEntity<Void> deleteGroup(@PathVariable String title);
+    @DeleteMapping(value = "/{id}")
+    ResponseEntity<Void> deleteGroup(@PathVariable int id);
 }

@@ -15,8 +15,8 @@ public class GroupController implements GroupApi {
     private final GroupService groupService;
 
     @Override
-    public GroupDto getGroup(String title) {
-        return groupService.getGroup(title);
+    public GroupDto getGroup(int id) {
+        return groupService.getGroup(id);
     }
 
     @Override
@@ -25,13 +25,13 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    public GroupDto updateGroup(String title, GroupDto groupDto) {
-        return groupService.updateGroup(title, groupDto);
+    public GroupDto updateGroup(int id, GroupDto groupDto) {
+        return groupService.updateGroup(id, groupDto);
     }
 
     @Override
-    public ResponseEntity<Void> deleteGroup(String title) {
-        groupService.deleteGroup(title);
+    public ResponseEntity<Void> deleteGroup(int id) {
+        groupService.deleteGroup(id);
         return ResponseEntity.noContent().build();
     }
 }
