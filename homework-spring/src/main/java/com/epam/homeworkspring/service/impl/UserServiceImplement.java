@@ -1,8 +1,11 @@
 package com.epam.homeworkspring.service.impl;
 
 import com.epam.homeworkspring.dto.UserDto;
+import com.epam.homeworkspring.exception.UserAlreadyExistException;
 import com.epam.homeworkspring.exception.UserNotFoundException;
+import com.epam.homeworkspring.model.Group;
 import com.epam.homeworkspring.model.User;
+import com.epam.homeworkspring.repository.GroupRepository;
 import com.epam.homeworkspring.repository.UserRepository;
 import com.epam.homeworkspring.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserServiceImplement implements UserService {
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
 
     @Override
     public UserDto getUser(String login) {
@@ -33,8 +37,8 @@ public class UserServiceImplement implements UserService {
     public UserDto createUser(UserDto userDto) {
         log.info("Creating user {} {} with login {}",
                 userDto.getFirstName(), userDto.getLastName(), userDto.getLogin());
-        if(userRepository.existsByLogin(userDto.getLogin())){
-            throw new RuntimeException("User is already exist");
+        if (userRepository.existsByLogin(userDto.getLogin())) {
+            throw new UserAlreadyExistException();
         }
 
         User user = userRepository.save(mapUserDtoToUser(userDto));
@@ -59,6 +63,17 @@ public class UserServiceImplement implements UserService {
         if (Objects.nonNull(lastName)) {
             persistedUser.setLastName(lastName);
         }
+        Integer age = userDto.getAge();
+        if (Objects.nonNull(age)) {
+            persistedUser.setAge(age);
+        }
+        if(userDto.getGroupId() > 0){
+            Group group = groupRepository.findById(userDto.getGroupId())
+                    .orElseThrow(()->new RuntimeException("Group is not found"));
+            if (Objects.nonNull(group)) {
+                persistedUser.setGroup(group);
+            }
+        }
 
         User storedUser = userRepository.save(persistedUser);
         log.info("User with login {} successfully updated", storedUser.getLogin());
@@ -74,18 +89,27 @@ public class UserServiceImplement implements UserService {
     }
 
     private UserDto mapUserToUserDto(User user) {
-        return UserDto.builder()
+        UserDto userDto = UserDto.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .age(user.getAge())
                 .login(user.getLogin())
                 .build();
+
+        Group group = user.getGroup();
+        if (Objects.nonNull(group)) {
+            userDto.setGroupId(group.getId());
+        }
+        return userDto;
     }
 
     private User mapUserDtoToUser(UserDto userDto) {
+        Group group = groupRepository.findById(userDto.getGroupId())
+                .orElseThrow(() -> new RuntimeException("Group is not found"));
         return User.builder()
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
+                .group(group)
                 .age(userDto.getAge())
                 .login(userDto.getLogin())
                 .password(userDto.getPassword())

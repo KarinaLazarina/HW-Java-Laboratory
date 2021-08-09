@@ -2,6 +2,7 @@ package com.epam.homeworkspring.dto;
 
 import com.epam.homeworkspring.dto.group.OnCreate;
 import com.epam.homeworkspring.dto.group.OnUpdate;
+import com.epam.homeworkspring.model.Group;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
@@ -37,4 +38,6 @@ public class UserDto {
     @Null(message = "Field should be empty", groups = OnUpdate.class)
     @NotBlank(message = "Field can't be empty", groups = OnCreate.class)
     private String repeatPassword;
+
+    private int groupId;
 }

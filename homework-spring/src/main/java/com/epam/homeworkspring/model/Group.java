@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
-@Table(name = "groupOfUsers")
+@Table(name = "userGroup")
 @Entity
 @Data
 @Builder
@@ -23,4 +23,7 @@ public class Group {
     private String title;
     private String kindOfActivity;
     private int maxCountOfUsers;
+
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<User> users;
 }
