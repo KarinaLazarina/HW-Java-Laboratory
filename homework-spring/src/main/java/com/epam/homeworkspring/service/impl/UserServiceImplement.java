@@ -10,8 +10,15 @@ import com.epam.homeworkspring.repository.UserRepository;
 import com.epam.homeworkspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -33,7 +40,20 @@ public class UserServiceImplement implements UserService {
     }
 
     @Override
-//    @Transactional
+    public List<UserDto> getUsers(Pageable pageable) {
+        log.info("Searching for users");
+        Page<User> users = userRepository.findAll(pageable);
+
+        List<UserDto> userDtoList = new ArrayList<>();
+        for (User user : users) {
+            userDtoList.add(mapUserToUserDto(user));
+        }
+        log.info("Find users: {}", users);
+        return userDtoList;
+    }
+
+    @Override
+    @Transactional
     public UserDto createUser(UserDto userDto) {
         log.info("Creating user {} {} with login {}",
                 userDto.getFirstName(), userDto.getLastName(), userDto.getLogin());
@@ -48,7 +68,7 @@ public class UserServiceImplement implements UserService {
     }
 
     @Override
-//    @Transactional
+    @Transactional
     public UserDto updateUser(String login, UserDto userDto) {
         log.info("Updating user with login {}", login);
 
@@ -67,9 +87,9 @@ public class UserServiceImplement implements UserService {
         if (Objects.nonNull(age)) {
             persistedUser.setAge(age);
         }
-        if(userDto.getGroupId() > 0){
+        if (userDto.getGroupId() > 0) {
             Group group = groupRepository.findById(userDto.getGroupId())
-                    .orElseThrow(()->new RuntimeException("Group is not found"));
+                    .orElseThrow(() -> new RuntimeException("Group is not found"));
             if (Objects.nonNull(group)) {
                 persistedUser.setGroup(group);
             }
@@ -104,16 +124,19 @@ public class UserServiceImplement implements UserService {
     }
 
     private User mapUserDtoToUser(UserDto userDto) {
-        Group group = groupRepository.findById(userDto.getGroupId())
-                .orElseThrow(() -> new RuntimeException("Group is not found"));
-        return User.builder()
+        User user = User.builder()
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
-                .group(group)
                 .age(userDto.getAge())
                 .login(userDto.getLogin())
                 .password(userDto.getPassword())
                 .build();
+        if (userDto.getGroupId() > 0) {
+            Group group = groupRepository.findById(userDto.getGroupId())
+                    .orElseThrow(() -> new RuntimeException("Group is not found"));
+            user.setGroup(group);
+        }
+        return user;
     }
 
 }

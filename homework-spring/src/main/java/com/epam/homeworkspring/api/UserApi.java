@@ -13,9 +13,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(tags = "User Api")
 @RequestMapping("/api/v1/users")
 public interface UserApi {
+
+    @ApiOperation("Get list of users")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping
+    List<UserModel> getUsers(@RequestParam int page);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "login", paramType = "path", required = true, value = "User login"),

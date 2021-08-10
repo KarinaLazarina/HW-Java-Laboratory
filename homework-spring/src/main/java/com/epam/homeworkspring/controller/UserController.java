@@ -7,8 +7,14 @@ import com.epam.homeworkspring.model.UserModel;
 import com.epam.homeworkspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +22,18 @@ import org.springframework.web.bind.annotation.*;
 public class UserController implements UserApi {
     private final UserService userService;
     private final UserAssembler userAssembler;
+
+    @Override
+    public List<UserModel> getUsers(int page) {
+        Pageable sortedByLogin = PageRequest.of(page, 2, Sort.by("login"));
+        List<UserDto> users = userService.getUsers(sortedByLogin);
+
+        List<UserModel> userModels = new ArrayList<>();
+        for (UserDto user : users) {
+            userModels.add(userAssembler.toModel(user));
+        }
+        return userModels;
+    }
 
     @Override
     public UserModel getUser(String login) {
