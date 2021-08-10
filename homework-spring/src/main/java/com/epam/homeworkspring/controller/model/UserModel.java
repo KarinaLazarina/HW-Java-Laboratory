@@ -1,4 +1,4 @@
-package com.epam.homeworkspring.model;
+package com.epam.homeworkspring.controller.model;
 
 import com.epam.homeworkspring.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;

@@ -1,5 +1,6 @@
 package com.epam.homeworkspring.api;
 
+import com.epam.homeworkspring.controller.model.GroupModel;
 import com.epam.homeworkspring.dto.GroupDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -19,13 +20,13 @@ public interface GroupApi {
     @ApiOperation("Get group")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{id}")
-    GroupDto getGroup(@PathVariable int id);
+    GroupModel getGroup(@PathVariable int id);
 
 
     @ApiOperation("Create group")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    GroupDto createGroup(@RequestBody GroupDto groupDto);
+    GroupModel createGroup(@RequestBody GroupDto groupDto);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "title", paramType = "path", required = true, value = "Group title"),
@@ -33,7 +34,7 @@ public interface GroupApi {
     @ApiOperation("Update group")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/{id}")
-    GroupDto updateGroup(@PathVariable int id, @RequestBody GroupDto groupDto);
+    GroupModel updateGroup(@PathVariable int id, @RequestBody GroupDto groupDto);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "title", paramType = "path", required = true, value = "Group title"),

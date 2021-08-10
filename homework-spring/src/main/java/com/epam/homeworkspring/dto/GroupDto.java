@@ -14,6 +14,8 @@ import javax.validation.constraints.Null;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GroupDto {
+    @Null(message = "Field should be empty", groups = {OnUpdate.class, OnCreate.class})
+    private int id;
 
     @NotBlank(message = "Field can't be empty", groups = OnCreate.class)
     private String title;

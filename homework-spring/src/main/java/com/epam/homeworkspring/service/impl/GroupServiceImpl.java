@@ -77,6 +77,7 @@ public class GroupServiceImpl implements GroupService {
 
     private GroupDto mapGroupToGroupDto(Group group) {
         return GroupDto.builder()
+                .id(group.getId())
                 .title(group.getTitle())
                 .kindOfActivity(group.getKindOfActivity())
                 .maxCountOfUsers(group.getMaxCountOfUsers())
@@ -85,6 +86,7 @@ public class GroupServiceImpl implements GroupService {
 
     private Group mapGroupDtoToGroup(GroupDto groupDto) {
         return Group.builder()
+                .id(groupDto.getId())
                 .title(groupDto.getTitle())
                 .kindOfActivity(groupDto.getKindOfActivity())
                 .maxCountOfUsers(groupDto.getMaxCountOfUsers())

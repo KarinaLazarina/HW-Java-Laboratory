@@ -1,6 +1,8 @@
 package com.epam.homeworkspring.controller;
 
 import com.epam.homeworkspring.api.GroupApi;
+import com.epam.homeworkspring.controller.assembler.GroupAssembler;
+import com.epam.homeworkspring.controller.model.GroupModel;
 import com.epam.homeworkspring.dto.GroupDto;
 import com.epam.homeworkspring.service.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -13,20 +15,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class GroupController implements GroupApi {
     private final GroupService groupService;
+    private final GroupAssembler groupAssembler;
 
     @Override
-    public GroupDto getGroup(int id) {
-        return groupService.getGroup(id);
+    public GroupModel getGroup(int id) {
+        GroupDto group = groupService.getGroup(id);
+        return groupAssembler.toModel(group);
     }
 
     @Override
-    public GroupDto createGroup(GroupDto groupDto) {
-        return groupService.createGroup(groupDto);
+    public GroupModel createGroup(GroupDto groupDto) {
+        GroupDto group = groupService.createGroup(groupDto);
+        return groupAssembler.toModel(group);
     }
 
     @Override
-    public GroupDto updateGroup(int id, GroupDto groupDto) {
-        return groupService.updateGroup(id, groupDto);
+    public GroupModel updateGroup(int id, GroupDto groupDto) {
+        GroupDto group = groupService.updateGroup(id, groupDto);
+        return groupAssembler.toModel(group);
     }
 
     @Override

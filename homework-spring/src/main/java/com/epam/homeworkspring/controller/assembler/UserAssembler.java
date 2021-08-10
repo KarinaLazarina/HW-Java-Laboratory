@@ -2,7 +2,7 @@ package com.epam.homeworkspring.controller.assembler;
 
 import com.epam.homeworkspring.controller.UserController;
 import com.epam.homeworkspring.dto.UserDto;
-import com.epam.homeworkspring.model.UserModel;
+import com.epam.homeworkspring.controller.model.UserModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;

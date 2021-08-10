@@ -3,7 +3,7 @@ package com.epam.homeworkspring.controller;
 import com.epam.homeworkspring.api.UserApi;
 import com.epam.homeworkspring.controller.assembler.UserAssembler;
 import com.epam.homeworkspring.dto.UserDto;
-import com.epam.homeworkspring.model.UserModel;
+import com.epam.homeworkspring.controller.model.UserModel;
 import com.epam.homeworkspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

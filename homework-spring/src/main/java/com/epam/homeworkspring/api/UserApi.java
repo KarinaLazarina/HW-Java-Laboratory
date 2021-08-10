@@ -3,7 +3,7 @@ package com.epam.homeworkspring.api;
 import com.epam.homeworkspring.dto.UserDto;
 import com.epam.homeworkspring.dto.group.OnCreate;
 import com.epam.homeworkspring.dto.group.OnUpdate;
-import com.epam.homeworkspring.model.UserModel;
+import com.epam.homeworkspring.controller.model.UserModel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
