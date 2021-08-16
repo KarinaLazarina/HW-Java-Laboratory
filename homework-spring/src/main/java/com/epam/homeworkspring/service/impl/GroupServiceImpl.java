@@ -1,9 +1,9 @@
 package com.epam.homeworkspring.service.impl;
 
 import com.epam.homeworkspring.dto.GroupDto;
-import com.epam.homeworkspring.exception.UserNotFoundException;
+import com.epam.homeworkspring.exception.GroupAlreadyExistsException;
+import com.epam.homeworkspring.exception.GroupNotFoundException;
 import com.epam.homeworkspring.model.Group;
-import com.epam.homeworkspring.model.User;
 import com.epam.homeworkspring.repository.GroupRepository;
 import com.epam.homeworkspring.service.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class GroupServiceImpl implements GroupService {
         log.info("Searching for group with id = " + id);
 
         Group group = groupRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Group is not found"));
+                .orElseThrow(GroupNotFoundException::new);
 
         log.info("Find group " + group.getTitle());
         return mapGroupToGroupDto(group);
@@ -33,7 +33,7 @@ public class GroupServiceImpl implements GroupService {
     public GroupDto createGroup(GroupDto groupDto) {
         log.info("Creating group {}", groupDto.getTitle());
         if(groupRepository.existsByTitle(groupDto.getTitle())){
-            throw new RuntimeException("Group is already exist");
+            throw new GroupAlreadyExistsException();
         }
 
         Group group = groupRepository.save(mapGroupDtoToGroup(groupDto));
@@ -47,7 +47,7 @@ public class GroupServiceImpl implements GroupService {
         log.info("Updating group with id = {}", id);
 
         Group persistedGroup = groupRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Group is not found"));
+                .orElseThrow(GroupNotFoundException::new);
 
         String title = groupDto.getTitle();
         if (Objects.nonNull(title)) {
@@ -67,10 +67,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void deleteGroup(int id) {
-       if(!groupRepository.existsById(id)){
-           throw new RuntimeException("Group is not found");
-       }
-       groupRepository.deleteById(id);
+        Group group = groupRepository.findById(id).orElseThrow(GroupNotFoundException::new);
+       groupRepository.delete(group);
 
        log.info("Group with id = {} successfully deleted", id);
     }
