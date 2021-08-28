@@ -1,6 +1,8 @@
 package com.epam.homeworkspring.service.impl;
 
 import com.epam.homeworkspring.dto.UserDto;
+import com.epam.homeworkspring.exception.GroupNotFoundException;
+import com.epam.homeworkspring.exception.PasswordNotValidException;
 import com.epam.homeworkspring.exception.UserAlreadyExistException;
 import com.epam.homeworkspring.exception.UserNotFoundException;
 import com.epam.homeworkspring.model.Group;
@@ -11,9 +13,7 @@ import com.epam.homeworkspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +89,7 @@ public class UserServiceImplement implements UserService {
         }
         if (userDto.getGroupId() > 0) {
             Group group = groupRepository.findById(userDto.getGroupId())
-                    .orElseThrow(() -> new RuntimeException("Group is not found"));
+                    .orElseThrow(GroupNotFoundException::new);
             if (Objects.nonNull(group)) {
                 persistedUser.setGroup(group);
             }
@@ -129,14 +129,23 @@ public class UserServiceImplement implements UserService {
                 .lastName(userDto.getLastName())
                 .age(userDto.getAge())
                 .login(userDto.getLogin())
-                .password(userDto.getPassword())
+                .password(extractPassword(userDto))
                 .build();
         if (userDto.getGroupId() > 0) {
             Group group = groupRepository.findById(userDto.getGroupId())
-                    .orElseThrow(() -> new RuntimeException("Group is not found"));
+                    .orElseThrow(GroupNotFoundException::new);
             user.setGroup(group);
         }
         return user;
+    }
+
+    private String extractPassword(UserDto userDto) {
+        if (userDto.getPassword() != null &&
+                Objects.equals(userDto.getPassword(), userDto.getRepeatPassword())) {
+            return userDto.getPassword();
+        } else {
+            throw new PasswordNotValidException();
+        }
     }
 
 }
